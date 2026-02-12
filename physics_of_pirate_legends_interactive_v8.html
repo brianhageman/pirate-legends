@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Physics of Pirate Legends — Interactive AP Physics 1 Lesson</title>
+  <style>
+    :root{
+      --bg:#081018;
+      --panel:#0e1b26cc;
+      --panel2:#0b1620cc;
+      --ink:#e9dfc7;
+      --muted:#c8bfa8;
+      --gold:#f2c14e;
+      --sea:#4fb6c6;
+      --warn:#ff6b6b;
+      --ok:#5ae38a;
+      --shadow: 0 16px 48px rgba(0,0,0,.35);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(79,182,198,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 0%, rgba(242,193,78,.12), transparent 55%),
+        radial-gradient(900px 600px at 60% 80%, rgba(255,107,107,.10), transparent 55%),
+        linear-gradient(180deg, #04080d, #07121b 35%, #04080d 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    header{
+      padding:28px 18px 10px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .titleRow{
+      display:flex;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      padding:10px 12px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(242,193,78,.22), rgba(242,193,78,.08));
+      border:1px solid rgba(242,193,78,.35);
+      box-shadow:var(--shadow);
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      font-size:12px;
+      color:var(--gold);
+      white-space:nowrap;
+    }
+    h1{
+      margin:0;
+      font-size:clamp(30px, 4.2vw, 44px);
+      line-height:1.05;
+      letter-spacing:.01em;
+    }
+    .subtitle{
+      margin:10px 0 0;
+      color:var(--muted);
+      max-width:72ch;
+      font-size:15px;
+      line-height:1.5;
+    }
+    main{max-width:1100px;margin:0 auto;padding:12px 18px 90px;}
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    .card{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid rgba(233,223,199,.12);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(800px 200px at 20% 0%, rgba(79,182,198,.12), transparent 60%),
+                  radial-gradient(600px 160px at 85% 0%, rgba(242,193,78,.10), transparent 55%);
+      pointer-events:none;
+      filter:saturate(1.1);
+    }
+    .card > *{position:relative}
+    h2{
+      margin:0 0 8px;
+      font-size:18px;
+      letter-spacing:.02em;
+      color:var(--gold);
+      text-transform:uppercase;
+    }
+    h3{
+      margin:14px 0 8px;
+      font-size:16px;
+      color:var(--ink);
+    }
+    p{margin:10px 0;color:var(--muted);line-height:1.55}
+    .small{font-size:13px;color:rgba(233,223,199,.75)}
+    .hr{
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(233,223,199,.20), transparent);
+      margin:14px 0;
+    }
+    .controls{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width:650px){.controls{grid-template-columns:1fr}}
+    label{
+      display:block;
+      font-size:12px;
+      color:rgba(233,223,199,.78);
+      margin:0 0 6px;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    input[type="range"]{width:100%}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{
+      font-family:var(--mono);
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(233,223,199,.18);
+      background:rgba(0,0,0,.18);
+      color:rgba(233,223,199,.92);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .pill strong{color:var(--ink)}
+    button{
+      cursor:pointer;
+      border:none;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:700;
+      color:#1b1407;
+      background:linear-gradient(180deg, var(--gold), #d6a63d);
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+    }
+    button.secondary{
+      color:var(--ink);
+      background:linear-gradient(180deg, rgba(79,182,198,.22), rgba(79,182,198,.08));
+      border:1px solid rgba(79,182,198,.35);
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+    }
+    button.ghost{
+      color:rgba(233,223,199,.88);
+      background:rgba(0,0,0,.12);
+      border:1px solid rgba(233,223,199,.18);
+      box-shadow:none;
+    }
+    .answer{
+      padding:12px;
+      border-radius:14px;
+      border:1px dashed rgba(233,223,199,.22);
+      background:rgba(0,0,0,.12);
+      margin-top:10px;
+    }
+    .answer.ok{border-color: rgba(90,227,138,.55); background:rgba(90,227,138,.10)}
+    .answer.warn{border-color: rgba(255,107,107,.55); background:rgba(255,107,107,.10)}
+    .answer b{color:var(--ink)}
+    .svgWrap{
+      border-radius:16px;
+      border:1px solid rgba(233,223,199,.14);
+      background:rgba(0,0,0,.14);
+      overflow:hidden;
+      margin-top:10px;
+    }
+    .kbd{font-family:var(--mono); font-size:12px; padding:2px 6px; border-radius:8px; border:1px solid rgba(233,223,199,.18); background:rgba(0,0,0,.18)}
+    .quizGrid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    @media (max-width:850px){.quizGrid{grid-template-columns:1fr}}
+    .dropZone{
+      border:1px solid rgba(233,223,199,.18);
+      border-radius:16px;
+      padding:12px;
+      min-height:110px;
+      background:rgba(0,0,0,.12);
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(233,223,199,.18);
+      background:rgba(0,0,0,.18);
+      color:rgba(233,223,199,.92);
+      margin:6px 6px 0 0;
+      user-select:none;
+    }
+    .chip[draggable="true"]{cursor:grab}
+    .chip .dot{
+      width:10px;height:10px;border-radius:999px;background:rgba(242,193,78,.9);
+      box-shadow:0 0 0 2px rgba(242,193,78,.18);
+    }
+    .footerNote{margin-top:14px;color:rgba(233,223,199,.70);font-size:12px}
+    .cite{font-size:12px;color:rgba(233,223,199,.65)}
+    .cite a{color:rgba(79,182,198,.9)}
+    details{border:1px solid rgba(233,223,199,.12); border-radius:16px; padding:10px 12px; background:rgba(0,0,0,.10)}
+    summary{cursor:pointer; font-weight:700; color:rgba(233,223,199,.9)}
+    .nowrap{white-space:nowrap}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="titleRow">
+    <div class="badge">AP Physics 1 • Unit 6: Fluids</div>
+    <div class="badge">Old‑Timey Pirate Mode</div>
+  </div>
+  <h1>The Physics of Pirate Legends</h1>
+  <p class="subtitle">
+    Jack Sparrow’s “rowboat trick” (a.k.a. the <em>seafloor walk</em>) looks clever on screen — but does it survive
+    <span class="nowrap">Archimedes’ Principle</span>, pressure, and Newton’s Laws?
+  </p>
+</header>
+<div style="max-width:1100px;margin:0 auto 20px;padding:0 18px;">
+  <canvas id="battleCanvas" width="1100" height="180" 
+          style="width:100%;height:auto;border-radius:18px;
+                 border:1px solid rgba(233,223,199,.15);
+                 background:#0a1620;box-shadow:0 16px 48px rgba(0,0,0,.35);">
+  </canvas>
+</div>
+
+
+<main>
+  <div class="grid">
+    <!-- STACKED: narrative + sims -->
+    <section class="card" id="story">
+      <h2>1) The Rowboat Trick</h2>
+      <p>
+        In <em>Pirates of the Caribbean</em>, Jack and Will flip a dinghy upside‑down, trap air, and try to walk it
+        across the seafloor to an anchored ship. Is it brilliant… or fantasy?
+      </p>
+
+      <div class="hr"></div>
+
+      <h2>2) Fundamentals of Floating</h2>
+      <h3>Density &amp; Displacement</h3>
+      <p>
+        Objects underwater still feel gravity. An object’s mass can be found from <span class="kbd">m = ρV</span>.
+        Whether it sinks or floats depends on density: steel (denser than water) sinks; styrofoam (less dense) floats.
+      </p>
+
+      <h3>Archimedes’ Principle — The Upward Push</h3>
+      <p>
+        Buoyancy is an upward force. Archimedes’ key idea:
+        <b>the buoyant force equals the weight of the displaced fluid</b>.
+      </p>
+
+      <div class="hr"></div>
+
+      <h2>3) The Pirate Buoyancy Simulator</h2>
+      <p>
+        Use the controls to model the trapped‑air dinghy. Then answer the questions below by pulling
+        numbers straight from the sim (like the gravity‑assist page style).
+      </p>
+
+      <div class="controls">
+        <div>
+          <label for="V0">Trapped air volume at surface, V<sub>0</sub> (m³)</label>
+          <input id="V0" type="range" min="0.25" max="6" value="3" step="0.05" />
+          <div class="row">
+            <span class="pill"><strong id="V0_out">3.00</strong> m³</span>
+            <button class="ghost" id="preset3m3" title="Set V0 = 3 m³ (slide example)">Jack’s Dinghy</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="depth">Depth below surface (m)</label>
+          <input id="depth" type="range" min="0" max="200" value="0" step="1" />
+          <div class="row">
+            <span class="pill"><strong id="depth_out">0</strong> m</span>
+            <button class="ghost" id="preset30m" title="Jump to 30 m (slide example)">Dive to 30 m</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="mBoat">Boat mass (kg)</label>
+          <input id="mBoat" type="range" min="5" max="4000" value="40" step="5" />
+          <div class="row">
+            <span class="pill"><strong id="mBoat_out">40</strong> kg</span>
+            <button class="ghost" id="ballast" title="Add lots of ballast quickly">Add “Gold” Ballast</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="mCrew">Crew mass (Jack + Will) (kg)</label>
+          <input id="mCrew" type="range" min="60" max="240" value="160" step="1" />
+          <div class="row">
+            <span class="pill"><strong id="mCrew_out">160</strong> kg</span>
+            <button class="secondary" id="resetAll">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer" id="readout">
+        <div class="row" style="gap:8px">
+          <span class="pill">Water density ρ = <strong>1000</strong> kg/m³</span>
+          <span class="pill">g = <strong>9.8</strong> m/s²</span>
+          <span class="pill">Pressure rule: <strong>+1 atm</strong> per <strong>10 m</strong></span>
+          <span class="pill">Boyle: <strong>P₁V₁ = P₂V₂</strong></span>
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+          <span class="pill">Total pressure P = <strong id="P_out">1.00</strong> atm</span>
+          <span class="pill">Compressed air volume V = <strong id="V_out">3.00</strong> m³</span>
+          <span class="pill">Buoyant force F<sub>B</sub> = <strong id="FB_out">29400</strong> N</span>
+          <span class="pill">≈ <strong id="FB_lbf">6600</strong> lbf lift</span>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <span class="pill">Weight of boat+crew mg = <strong id="W_out">1960</strong> N</span>
+          <span class="pill">Net upward (no pushing) = <strong id="net_out">27440</strong> N</span>
+          <span class="pill"><strong id="verdict_out" style="color:var(--warn)">ROCKETS UP</strong></span>
+        </div>
+      </div>
+
+      <div class="svgWrap">
+        <svg id="fbd" viewBox="0 0 860 320" width="100%" height="320" aria-label="Free body diagram">
+          <defs>
+            <marker id="arrowUp" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="0">
+              <path d="M 0 10 L 5 0 L 10 10 Z" fill="rgba(79,182,198,.95)"></path>
+            </marker>
+            <marker id="arrowDn" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="0">
+              <path d="M 0 0 L 5 10 L 10 0 Z" fill="rgba(242,193,78,.95)"></path>
+            </marker>
+          </defs>
+
+          <!-- ocean -->
+          <rect x="0" y="0" width="860" height="320" fill="rgba(79,182,198,.08)"/>
+          <path d="M0,70 C160,40 260,95 430,70 C590,47 710,92 860,62 L860,0 L0,0 Z" fill="rgba(79,182,198,.16)"/>
+          <text x="18" y="34" fill="rgba(233,223,199,.80)" font-size="14">Free‑Body Diagram (boat + trapped air + crew)</text>
+
+          <!-- boat blob -->
+          <g transform="translate(360,130)">
+            <path d="M0,70 C40,5 140,5 180,70 C150,100 30,100 0,70 Z"
+              fill="rgba(0,0,0,.25)" stroke="rgba(233,223,199,.22)" stroke-width="2"/>
+            <path d="M22,62 C52,22 128,22 158,62 C132,82 48,82 22,62 Z"
+              fill="rgba(242,193,78,.10)" stroke="rgba(242,193,78,.22)" stroke-width="1.5"/>
+            <text x="90" y="66" text-anchor="middle" fill="rgba(233,223,199,.9)" font-size="13">Overturned Dinghy</text>
+          </g>
+
+          <!-- forces (dynamic) -->
+          <g id="forces">
+            <!-- buoyancy arrow -->
+            <line id="fbLine" x1="450" y1="210" x2="450" y2="100"
+                  stroke="rgba(79,182,198,.95)" stroke-width="7" marker-end="url(#arrowUp)"/>
+            <text id="fbText" x="460" y="120" fill="rgba(79,182,198,.95)" font-size="14">Fᵦ</text>
+
+            <!-- weight arrow -->
+            <line id="wLine" x1="450" y1="210" x2="450" y2="300"
+                  stroke="rgba(242,193,78,.95)" stroke-width="6" marker-end="url(#arrowDn)"/>
+            <text id="wText" x="460" y="290" fill="rgba(242,193,78,.95)" font-size="14">mg</text>
+
+            <!-- human push arrows (down) -->
+            <line id="fjLine" x1="320" y1="120" x2="320" y2="220"
+                  stroke="rgba(233,223,199,.75)" stroke-width="4" marker-end="url(#arrowDn)"/>
+            <line id="fwLine" x1="610" y1="120" x2="610" y2="220"
+                  stroke="rgba(233,223,199,.75)" stroke-width="4" marker-end="url(#arrowDn)"/>
+            <text x="300" y="116" fill="rgba(233,223,199,.75)" font-size="13">Fⱼ</text>
+            <text x="590" y="116" fill="rgba(233,223,199,.75)" font-size="13">Fʷ</text>
+          </g>
+
+          <!-- seafloor -->
+          <rect x="0" y="286" width="860" height="34" fill="rgba(0,0,0,.22)"/>
+          <path d="M0,286 C120,276 210,296 340,286 C510,272 640,302 860,286" fill="none" stroke="rgba(233,223,199,.20)" stroke-width="2"/>
+          <text x="18" y="308" fill="rgba(233,223,199,.65)" font-size="12">Seafloor</text>
+        </svg>
+      </div>
+
+      <div class="hr"></div>
+
+      <h2>4) Student Missions (Answer using the simulator)</h2>
+
+      <details open>
+        <summary>Mission A — Recreate the slide’s “Massive Lift” number</summary>
+        <div class="answer" id="missionA">
+          <p class="small" style="margin-top:0">
+            Set <b>V<sub>0</sub> = 3.00 m³</b> and <b>depth = 0 m</b>. (Use the <span class="kbd">Jack’s Dinghy</span> preset.)
+            Record the buoyant force in newtons and pounds‑force.
+          </p>
+          <div class="row" style="align-items:flex-end">
+            <div style="flex:1;min-width:240px">
+              <label>F<sub>B</sub> (N)</label>
+              <input id="A_FB" type="number" step="1" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <div style="flex:1;min-width:240px">
+              <label>F<sub>B</sub> (lbf)</label>
+              <input id="A_lbf" type="number" step="1" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <button id="checkA">Check</button>
+          </div>
+          <div class="footerNote" id="A_feedback"></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Mission B — “3‑Ton Problem” reasoning</summary>
+        <div class="answer" id="missionB">
+          <p class="small" style="margin-top:0">
+            At the surface with V<sub>0</sub> = 3 m³, the dinghy gets an upward buoyant force.
+            How heavy would the boat need to be (in kg) so that <b>mg ≈ F<sub>B</sub></b> (neutral for the boat alone)?
+          </p>
+          <div class="row" style="align-items:flex-end">
+            <div style="flex:1;min-width:260px">
+              <label>Required boat mass (kg)</label>
+              <input id="B_m" type="number" step="1" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <button id="checkB">Check</button>
+          </div>
+          <div class="footerNote" id="B_feedback"></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Mission C — Pressure &amp; Compression at depth (Boyle’s Law)</summary>
+        <div class="answer" id="missionC">
+          <p class="small" style="margin-top:0">
+            Use the <span class="kbd">Dive to 30 m</span> preset. Record:
+            (1) the total pressure in atm, (2) the compressed air volume, (3) the buoyant force in lbf.
+            Then decide: can two humans hold it down?
+          </p>
+          <div class="controls" style="margin-top:0">
+            <div>
+              <label>P at 30 m (atm)</label>
+              <input id="C_P" type="number" step="0.01" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <div>
+              <label>V at 30 m (m³)</label>
+              <input id="C_V" type="number" step="0.01" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+          </div>
+          <div class="row" style="align-items:flex-end">
+            <div style="flex:1;min-width:260px">
+              <label>F<sub>B</sub> at 30 m (lbf)</label>
+              <input id="C_lbf" type="number" step="1" placeholder="Enter your value" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <button id="checkC">Check</button>
+          </div>
+          <div class="footerNote" id="C_feedback"></div>
+        </div>
+      
+      <details>
+        <summary>Mission D — Find the “neutral depth” for a fixed setup</summary>
+        <div class="answer" id="missionD">
+          <p class="small" style="margin-top:0">
+            Set <b>V<sub>0</sub> = 3.00 m³</b>, <b>boat mass = 40 kg</b>, and <b>crew mass = 160 kg</b>.
+            Now increase depth until the net force is as close to zero as you can (|net| ≤ 500 N).
+            Record the depth where it is closest.
+          </p>
+          <div class="row" style="align-items:flex-end">
+            <div style="flex:1;min-width:260px">
+              <label>Depth for near‑neutral (m)</label>
+              <input id="D_depth" type="number" step="1" placeholder="Enter your value"
+                     style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <button id="checkD">Check</button>
+          </div>
+          <div class="footerNote" id="D_feedback"></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Mission E — Compression challenge: “half the volume” depth</summary>
+        <div class="answer" id="missionE">
+          <p class="small" style="margin-top:0">
+            Keep <b>V<sub>0</sub> = 3.00 m³</b>. Find the depth where the trapped air volume is about <b>half</b> of V<sub>0</sub>.
+            (Use the simulator’s V readout — you’re hunting a depth.)
+          </p>
+          <div class="controls" style="margin-top:0">
+            <div>
+              <label>Depth (m)</label>
+              <input id="E_depth" type="number" step="1" placeholder="Enter your value"
+                     style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <div>
+              <label>Measured V at that depth (m³)</label>
+              <input id="E_V" type="number" step="0.01" placeholder="Enter your value"
+                     style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+          </div>
+          <div class="row" style="align-items:flex-end">
+            <button id="checkE">Check</button>
+          </div>
+          <div class="footerNote" id="E_feedback"></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Mission F — “How much gold?” ballast required at 30 m</summary>
+        <div class="answer" id="missionF">
+          <p class="small" style="margin-top:0">
+            Use the <span class="kbd">Dive to 30 m</span> preset (V<sub>0</sub> = 3 m³, depth = 30 m).
+            Assume the crew mass stays at <b>160 kg</b>.
+            Adjust the <b>boat mass</b> until the net force is near zero (|net| ≤ 500 N).
+            Record the required boat mass (this models adding ballast).
+          </p>
+          <div class="row" style="align-items:flex-end">
+            <div style="flex:1;min-width:260px">
+              <label>Boat mass for near‑neutral at 30 m (kg)</label>
+              <input id="F_mBoat" type="number" step="5" placeholder="Enter your value"
+                     style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(233,223,199,.18);background:rgba(0,0,0,.18);color:var(--ink)" />
+            </div>
+            <button id="checkF">Check</button>
+          </div>
+          <div class="footerNote" id="F_feedback"></div>
+        </div>
+      </details>
+</details>
+
+      <p class="cite">
+        Content adapted from your slide deck: “The Physics of Pirate Legends” (Buoyancy, Archimedes, Boyle’s Law, and the final verdict).
+      </p>
+    </section>
+
+    <!-- STACKED: concepts + interactive matching -->
+    <aside class="card" id="concepts">
+      <h2>Concept Deck (Interactive)</h2>
+
+      <h3>Neutral Buoyancy — Human Density</h3>
+      <p>
+        Humans are roughly 60% water, so our density is close to water. That’s why you can feel almost weightless
+        underwater: <b>F<sub>B</sub> nearly offsets F<sub>g</sub></b>. To walk on the seafloor, you need extra downward force.
+      </p>
+
+      <div class="hr"></div>
+
+      <h3>Quick Check: Sink / Float / Neutral</h3>
+      <p class="small">Drag the three “objects” into the correct bin. You can reset any time.</p>
+
+      <div id="chips" class="row" style="gap:0">
+        <div class="chip" draggable="true" data-answer="sink"><span class="dot"></span>Steel block (ρ &gt; ρwater)</div>
+        <div class="chip" draggable="true" data-answer="float"><span class="dot"></span>Styrofoam (ρ &lt; ρwater)</div>
+        <div class="chip" draggable="true" data-answer="neutral"><span class="dot"></span>Human (≈ neutral buoyancy)</div>
+      </div>
+
+      <div class="quizGrid" style="margin-top:12px">
+        <div class="dropZone" data-zone="float">
+          <h3 style="margin-top:0">Floats</h3>
+          <p class="small">F<sub>B</sub> &gt; F<sub>g</sub></p>
+          <div class="dropList"></div>
+        </div>
+        <div class="dropZone" data-zone="sink">
+          <h3 style="margin-top:0">Sinks</h3>
+          <p class="small">F<sub>g</sub> &gt; F<sub>B</sub></p>
+          <div class="dropList"></div>
+        </div>
+        <div class="dropZone" data-zone="neutral">
+          <h3 style="margin-top:0">Neutral</h3>
+          <p class="small">F<sub>B</sub> ≈ F<sub>g</sub></p>
+          <div class="dropList"></div>
+        </div>
+        <div class="dropZone" data-zone="dock">
+          <h3 style="margin-top:0">Dock (Reset Area)</h3>
+          <p class="small">Drop here to pull objects back out.</p>
+          <div class="dropList"></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="secondary" id="checkDrag">Check Bins</button>
+        <button class="ghost" id="resetDrag">Reset Bins</button>
+      </div>
+      <div class="footerNote" id="dragFeedback"></div>
+
+      <div class="hr"></div>
+
+      <h3>Final Verdict (from the physics)</h3>
+      <p>
+        Even with compression, the trapped air creates a huge upward buoyant force. Without an absurd amount of ballast
+        (gold doubloons…), the boat would surge upward.
+      </p>
+
+      <div class="answer" id="finalBox">
+        <b>Captain’s Conclusion:</b> Cinematic masterpiece, physical fantasy — unless you bring stealthy wheelbarrows of gold.
+      </div>
+
+      <div class="footerNote">
+        Tip: In the simulator, try increasing boat mass until the net upward force is near zero. That “massive ballast”
+        is the core idea behind the slide deck’s conclusion.
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script>
+  // ----- constants -----
+  const rho = 1000;     // kg/m^3
+  const g = 9.8;        // m/s^2
+  const ATM_PER_10M = 1; // +1 atm each 10 m (total pressure rule)
+
+  // ----- elements -----
+  const el = (id)=>document.getElementById(id);
+
+  const V0 = el("V0");
+  const depth = el("depth");
+  const mBoat = el("mBoat");
+  const mCrew = el("mCrew");
+
+  // outputs
+  const V0_out = el("V0_out");
+  const depth_out = el("depth_out");
+  const mBoat_out = el("mBoat_out");
+  const mCrew_out = el("mCrew_out");
+
+  const P_out = el("P_out");
+  const V_out = el("V_out");
+  const FB_out = el("FB_out");
+  const FB_lbf = el("FB_lbf");
+  const W_out = el("W_out");
+  const net_out = el("net_out");
+  const verdict_out = el("verdict_out");
+
+  // FBD lines
+  const fbLine = el("fbLine");
+  const wLine  = el("wLine");
+
+  // helpers
+  const clamp = (x,a,b)=>Math.max(a, Math.min(b,x));
+  const round = (x, d=2)=> Number(x.toFixed(d));
+
+  function pressureAtm(d){
+    // total pressure in atm (surface ~1 atm)
+    return 1 + (d/10)*ATM_PER_10M;
+  }
+
+  function compressedVolume(V0, P){
+    // Boyle's law with P0=1 atm
+    return V0 / P;
+  }
+
+  function buoyantForceN(V){
+    return rho * g * V;
+  }
+
+  function N_to_lbf(N){
+    return N * 0.2248089439;
+  }
+
+  function update(){
+    const V0v = Number(V0.value);
+    const dv  = Number(depth.value);
+    const mB  = Number(mBoat.value);
+    const mC  = Number(mCrew.value);
+
+    V0_out.textContent = round(V0v,2).toFixed(2);
+    depth_out.textContent = dv.toFixed(0);
+    mBoat_out.textContent = mB.toFixed(0);
+    mCrew_out.textContent = mC.toFixed(0);
+
+    const P = pressureAtm(dv);
+    const V = compressedVolume(V0v, P);
+
+    const FB = buoyantForceN(V);
+    const W  = (mB + mC) * g;
+    const net = FB - W;
+
+    P_out.textContent = round(P,2).toFixed(2);
+    V_out.textContent = round(V,2).toFixed(2);
+    FB_out.textContent = Math.round(FB).toString();
+    FB_lbf.textContent = Math.round(N_to_lbf(FB)).toString();
+    W_out.textContent = Math.round(W).toString();
+    net_out.textContent = Math.round(net).toString();
+
+    // verdict
+    let verdict = "BALANCED-ish";
+    let color = "var(--gold)";
+    if (net > 400) { verdict = "ROCKETS UP"; color = "var(--warn)"; }
+    if (net < -400){ verdict = "SINKS HARD"; color = "var(--sea)"; }
+    verdict_out.textContent = verdict;
+    verdict_out.style.color = color;
+
+    // FBD scaling (visual only)
+    // Map forces to arrow lengths in pixels with saturation so it fits.
+    const maxLen = 150; // px
+    const minLen = 35;
+    const FBlen = clamp((FB/30000) * maxLen, minLen, maxLen);
+    const Wlen  = clamp((W/30000)  * maxLen, minLen, maxLen);
+
+    // FBD origin at the boat's center (shared start point)
+    const y0 = 210;  // visual center of the dinghy in this SVG
+
+    // Buoyancy arrow: start at center and point up
+    fbLine.setAttribute("x1", 450);
+    fbLine.setAttribute("x2", 450);
+    fbLine.setAttribute("y1", y0);
+    fbLine.setAttribute("y2", y0 - FBlen);
+
+    // Weight arrow: start at center and point down
+    wLine.setAttribute("x1", 450);
+    wLine.setAttribute("x2", 450);
+    wLine.setAttribute("y1", y0);
+    wLine.setAttribute("y2", y0 + Wlen);
+  }
+
+  // presets
+  el("preset3m3").addEventListener("click", ()=>{
+    V0.value = 3;
+    depth.value = 0;
+    update();
+    window.scrollTo({top: document.getElementById("story").offsetTop - 12, behavior:"smooth"});
+  });
+  el("preset30m").addEventListener("click", ()=>{
+    V0.value = 3;
+    depth.value = 30;
+    update();
+    window.scrollTo({top: document.getElementById("story").offsetTop - 12, behavior:"smooth"});
+  });
+
+  el("ballast").addEventListener("click", ()=>{
+    // add ~500 kg per click, capped
+    mBoat.value = Math.min(4000, Number(mBoat.value) + 500);
+    update();
+  });
+
+  el("resetAll").addEventListener("click", ()=>{
+    V0.value = 3;
+    depth.value = 0;
+    mBoat.value = 40;
+    mCrew.value = 160;
+    update();
+  });
+
+  // live updates
+  [V0, depth, mBoat, mCrew].forEach(x => x.addEventListener("input", update));
+
+  // ----- Missions (auto-check) -----
+  function setFeedback(id, ok, msg){
+    const box = el(id);
+    box.textContent = msg;
+    box.style.color = ok ? "rgba(90,227,138,.95)" : "rgba(255,107,107,.95)";
+  }
+
+  el("checkA").addEventListener("click", ()=>{
+    // expected values at V0=3, depth=0: FB=29400 N; lbf≈6600
+    const fb = Number(el("A_FB").value);
+    const lbf = Number(el("A_lbf").value);
+    const ok1 = Math.abs(fb - 29400) <= 400;     // tolerance
+    const ok2 = Math.abs(lbf - 6600) <= 120;
+    if(ok1 && ok2){
+      setFeedback("A_feedback", true, "Aye! That matches the slide’s ~29,400 N (≈6,600 lbf) lift.");
+      missionDone.A = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("A_feedback", false,
+        "Not quite. Hint: use V0 = 3.00 m³ and depth = 0 m, then copy the sim’s FB readout (N and lbf).");
+    }
+  });
+
+  el("checkB").addEventListener("click", ()=>{
+    // required boat mass for mg≈FB at surface: m≈FB/g = rho*V0
+    // with V0=3: m≈3000 kg
+    const m = Number(el("B_m").value);
+    const ok = Math.abs(m - 3000) <= 150;
+    if(ok){
+      setFeedback("B_feedback", true, "Correct. About 3,000 kg (≈3 tons) of mass is needed to match the buoyant force.");
+      missionDone.B = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("B_feedback", false,
+        "Try again. At the surface: FB = ρgV0. Set mg = FB ⇒ m = ρV0. With V0 = 3 m³ and ρ = 1000, what do you get?");
+    }
+  });
+
+  el("checkC").addEventListener("click", ()=>{
+    const P = Number(el("C_P").value);
+    const V = Number(el("C_V").value);
+    const lbf = Number(el("C_lbf").value);
+    const okP = Math.abs(P - 4.00) <= 0.15;
+    const okV = Math.abs(V - 0.75) <= 0.06;
+    const okL = Math.abs(lbf - 1600) <= 120;
+    if(okP && okV && okL){
+      setFeedback("C_feedback", true,
+        "Yup. At 30 m: P≈4 atm, V≈0.75 m³, and the lift is still ~1,600 lbf — way beyond two people to hold down.");
+      missionDone.C = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("C_feedback", false,
+        "Close, but not there. Use the 30 m preset (V0=3 m³). Pressure rule gives ~4 atm; Boyle gives V≈0.75 m³; then FB≈1600 lbf.");
+    }
+  });
+
+  
+  // ----- Missions D/E/F (auto-checks) -----
+  // D: near-neutral depth with default masses at V0=3.
+  // Physics target: net ~ 0 => FB ~= W. With m_total=200 kg => W=1960 N.
+  // FB = rho*g*(V0/P). Solve for P ~ (rho*V0)/(m_total) = 3000/200 = 15 atm => depth ~ 140 m.
+  // But our depth slider tops at 60 m, so in THIS simulator range it will never reach neutral with these masses.
+  // Therefore we check that students discover "no solution within slider range" by answering 60 m (max) AND noting net still positive.
+  // We'll accept depth >= 55 m as "best you can do", and we will message that it's still strongly upward.
+  el("checkD").addEventListener("click", ()=>{
+    const d = Number(el("D_depth").value);
+    if(!Number.isFinite(d)){ setFeedback("D_feedback", false, "Enter a depth value."); return; }
+    const ok = Math.abs(d - 140) <= 10;
+    if(ok){
+      setFeedback("D_feedback", true,
+        "Excellent. Around 140 m the buoyant force drops enough for near-neutral conditions. That depth matches the physics prediction from FB = mg.");
+      missionDone.D = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("D_feedback", false,
+        "Not quite. Use the simulator to hunt for the depth where the net force readout is closest to zero. Think about how pressure changes with depth.");
+    }
+  });
+
+  // E: half-volume condition: V = V0/2 => P = 2 atm => depth ~ 10 m (since P = 1 + d/10).
+  el("checkE").addEventListener("click", ()=>{
+    const d = Number(el("E_depth").value);
+    const Vmeas = Number(el("E_V").value);
+    if(!Number.isFinite(d) || !Number.isFinite(Vmeas)){
+      setFeedback("E_feedback", false, "Enter both depth and measured volume.");
+      return;
+    }
+    const okD = Math.abs(d - 10) <= 2;
+    const okV = Math.abs(Vmeas - 1.5) <= 0.12; // half of 3.00
+    if(okD && okV){
+      setFeedback("E_feedback", true,
+        "Nice. Half-volume corresponds to about 2 atm total pressure, which happens around 10 m in our pressure rule.");
+      missionDone.E = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("E_feedback", false,
+        "Not yet. Hint: half the volume means pressure doubles. Use the sim to find the depth where V is about half of V0.");
+    }
+  });
+
+  // F: near-neutral at 30 m with crew=160 and V0=3: FB ≈ 7350 N; so required total mass ~ 750 kg; boat mass ~ 590 kg.
+  el("checkF").addEventListener("click", ()=>{
+    const m = Number(el("F_mBoat").value);
+    if(!Number.isFinite(m)){ setFeedback("F_feedback", false, "Enter a boat mass."); return; }
+    const ok = Math.abs(m - 590) <= 80;
+    if(ok){
+      setFeedback("F_feedback", true,
+        "That’s in range. It takes hundreds of kilograms of ballast at 30 m for near-neutral — which is exactly why the movie version is… ambitious.");
+      missionDone.F = true; tryUnlockEasterEgg();
+    }else{
+      setFeedback("F_feedback", false,
+        "Try again. Use the 30 m preset, keep crew at 160 kg, and increase boat mass until the net force readout is close to zero.");
+    }
+  });
+
+// ----- Drag & drop bins -----
+  const chips = Array.from(document.querySelectorAll(".chip[draggable='true']"));
+  const zones = Array.from(document.querySelectorAll(".dropZone"));
+
+  function makeDroppable(zone){
+    zone.addEventListener("dragover", (e)=>{ e.preventDefault(); zone.style.borderColor="rgba(79,182,198,.55)"; });
+    zone.addEventListener("dragleave", ()=>{ zone.style.borderColor="rgba(233,223,199,.18)"; });
+    zone.addEventListener("drop", (e)=>{
+      e.preventDefault();
+      zone.style.borderColor="rgba(233,223,199,.18)";
+      const id = e.dataTransfer.getData("text/plain");
+      const chip = document.getElementById(id);
+      zone.querySelector(".dropList").appendChild(chip);
+    });
+  }
+
+  chips.forEach((c,i)=>{
+    c.id = "chip_"+i;
+    c.addEventListener("dragstart", (e)=>{
+      e.dataTransfer.setData("text/plain", c.id);
+    });
+  });
+  zones.forEach(makeDroppable);
+
+  el("resetDrag").addEventListener("click", ()=>{
+    const dock = document.querySelector('.dropZone[data-zone="dock"] .dropList');
+    chips.forEach(c => dock.appendChild(c));
+    el("dragFeedback").textContent = "";
+  });
+
+  el("checkDrag").addEventListener("click", ()=>{
+    let correct = 0, total = chips.length;
+    zones.forEach(z=>{
+      const zoneName = z.getAttribute("data-zone");
+      const inZone = Array.from(z.querySelectorAll(".chip"));
+      inZone.forEach(ch=>{
+        if(zoneName === "dock") return;
+        if(ch.dataset.answer === zoneName) correct++;
+      });
+    });
+    if(correct === total){
+      el("dragFeedback").textContent = "Perfect! Your bins match the density/force relationships.";
+      el("dragFeedback").style.color = "rgba(90,227,138,.95)";
+    }else{
+      el("dragFeedback").textContent = `Not yet: ${correct}/${total} correct. Hint: think “relative density” and the sign of (Fᵦ − Fg).`;
+      el("dragFeedback").style.color = "rgba(255,107,107,.95)";
+    }
+  });
+
+  // init
+  update();
+  // start drag items in dock area
+  el("resetDrag").click();
+
+  
+  // ----- Pixel Pirate Ship Battle Banner (with arcs, smoke, and Easter Egg) -----
+  const canvas = document.getElementById("battleCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const waterY = 130;      // top of water band
+  const deckY  = 110;      // cannon height (pixels)
+  const g_px   = 0.18;     // gravity in px/frame^2 (visual, not SI)
+
+  let cannonballs = [];
+  let smoke = [];
+  let explosions = [];
+
+  let easterUnlocked = false;
+  let krakenMode = false;
+
+  // Hidden UI (appears only after missions completed)
+  const eggBtn = document.createElement("button");
+  eggBtn.textContent = "🦑 Easter Egg: Kraken Mode";
+  eggBtn.className = "secondary";
+  eggBtn.style.display = "none";
+  eggBtn.style.marginTop = "10px";
+  eggBtn.style.marginLeft = "18px";
+  eggBtn.title = "Unlocked by completing all missions";
+  document.querySelector("header").appendChild(eggBtn);
+
+  eggBtn.addEventListener("click", ()=>{
+    krakenMode = !krakenMode;
+    eggBtn.textContent = krakenMode ? "🦑 Kraken Mode: ON" : "🦑 Easter Egg: Kraken Mode";
+  });
+
+  function px(x){ return Math.round(x); }
+
+  function drawSky(){
+    // parallax-ish sky
+    const t = Date.now()/1000;
+    ctx.fillStyle = krakenMode ? "#05070b" : "#081826";
+    ctx.fillRect(0,0,W,H);
+
+    // stars
+    ctx.globalAlpha = krakenMode ? 0.55 : 0.35;
+    ctx.fillStyle = "#e9dfc7";
+    for(let i=0;i<90;i++){
+      const x = (i*73) % W;
+      const y = (i*41) % 85;
+      if(((i*19) % 7) === 0){
+        ctx.fillRect(x, y, 2, 2);
+      }else{
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // moon
+    ctx.fillStyle = krakenMode ? "rgba(242,193,78,.22)" : "rgba(242,193,78,.14)";
+    ctx.fillRect(W-140, 22, 44, 44);
+    ctx.fillStyle = krakenMode ? "rgba(242,193,78,.18)" : "rgba(242,193,78,.10)";
+    ctx.fillRect(W-128, 34, 20, 20);
+  }
+
+  function drawWater(){
+    // water band
+    ctx.fillStyle = krakenMode ? "#0a1a22" : "#123040";
+    ctx.fillRect(0, waterY, W, H-waterY);
+
+    // waves
+    ctx.fillStyle = krakenMode ? "#16394e" : "#1c4f6b";
+    const tt = Date.now()/450;
+    for(let i=0;i<W;i+=18){
+      const yy = waterY + 5 + Math.sin((tt + i)/18)*5 + (krakenMode? 2*Math.sin((tt+i)/7):0);
+      ctx.fillRect(i, yy, 12, 5);
+    }
+  }
+
+  function drawPixelShip(x, flip=false){
+    ctx.save();
+    ctx.translate(x, 0);
+    if(flip){
+      ctx.translate(0,0);
+      ctx.scale(-1,1);
+    }
+    // hull
+    ctx.fillStyle = "#3b2a1a";
+    ctx.fillRect(0, deckY+20, 86, 20);
+    ctx.fillStyle = "#5a3d24";
+    ctx.fillRect(10, deckY+12, 66, 10);
+
+    // mast
+    ctx.fillStyle = "#6b4a2b";
+    ctx.fillRect(40, deckY-18, 10, 50);
+
+    // sail
+    ctx.fillStyle = "#d9d2b6";
+    ctx.fillRect(52, deckY-14, 28, 24);
+    ctx.fillStyle = "rgba(0,0,0,.12)";
+    ctx.fillRect(60, deckY-12, 6, 20);
+
+    // flag
+    ctx.fillStyle = krakenMode ? "#8e2b2b" : "#2b2b2b";
+    ctx.fillRect(35, deckY-26, 22, 8);
+    ctx.fillRect(52, deckY-22, 6, 3);
+
+    // cannon
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(0, deckY+10, 16, 8);
+
+    ctx.restore();
+  }
+
+  function drawKraken(){
+    // simple pixel tentacles rising near center
+    const baseX = W/2 - 40;
+    const t = Date.now()/350;
+    ctx.fillStyle = "#1e6b5a";
+    for(let k=0;k<4;k++){
+      const x = baseX + k*30 + Math.sin(t + k)*6;
+      for(let s=0;s<6;s++){
+        const y = waterY + 12 - s*10 + Math.sin(t*1.2 + s + k)*4;
+        ctx.fillRect(px(x), px(y), 10, 10);
+      }
+    }
+    // eyes
+    ctx.fillStyle = "#e9dfc7";
+    ctx.fillRect(px(W/2-8), px(waterY+10), 6, 6);
+    ctx.fillRect(px(W/2+8), px(waterY+10), 6, 6);
+    ctx.fillStyle = "#111";
+    ctx.fillRect(px(W/2-6), px(waterY+12), 2, 2);
+    ctx.fillRect(px(W/2+10), px(waterY+12), 2, 2);
+  }
+
+  function fireCannon(fromLeft){
+    const x0 = fromLeft ? 286 : (W-286);
+    const y0 = deckY+12;
+    const dir = fromLeft ? 1 : -1;
+
+    // pick an angle and speed (visual); Kraken Mode fires faster & higher arc
+    const angle = (krakenMode ? (Math.random()*0.35 + 0.55) : (Math.random()*0.28 + 0.45)); // radians (approx 26–52°)
+    const speed = (krakenMode ? (Math.random()*2.2 + 6.0) : (Math.random()*1.8 + 5.0));     // px/frame
+
+    const vx = dir * speed * Math.cos(angle);
+    const vy = -speed * Math.sin(angle);
+
+    cannonballs.push({x:x0, y:y0, vx, vy, life: 500, trail: []});
+
+    // muzzle puff
+    for(let i=0;i<10;i++){
+      smoke.push({x:x0, y:y0, vx: dir*(Math.random()*0.6+0.2), vy: -Math.random()*0.6, a: 0.9, s: 4+Math.random()*4});
+    }
+  }
+
+  function spawnExplosion(x,y){
+    explosions.push({x,y,life: 18});
+    for(let i=0;i<26;i++){
+      smoke.push({x, y, vx:(Math.random()-0.5)*1.6, vy:(Math.random()-0.7)*1.4, a:0.9, s:5+Math.random()*7, dark:true});
+    }
+  }
+
+  function updateParticles(){
+    // smoke particles
+    for(let i=smoke.length-1;i>=0;i--){
+      const p = smoke[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += (krakenMode ? 0.02 : 0.01); // slight drift down
+      p.a *= 0.96;
+      p.s *= 0.99;
+      if(p.a < 0.05 || p.s < 1.2) smoke.splice(i,1);
+    }
+
+    // explosions
+    for(let i=explosions.length-1;i>=0;i--){
+      explosions[i].life--;
+      if(explosions[i].life <= 0) explosions.splice(i,1);
+    }
+  }
+
+  function drawParticles(){
+    // smoke
+    for(const p of smoke){
+      ctx.globalAlpha = p.a;
+      ctx.fillStyle = p.dark ? "rgba(20,20,20,.9)" : "rgba(233,223,199,.65)";
+      ctx.fillRect(px(p.x - p.s/2), px(p.y - p.s/2), px(p.s), px(p.s));
+    }
+    ctx.globalAlpha = 1;
+
+    // explosions
+    for(const e of explosions){
+      const k = e.life/18;
+      ctx.fillStyle = `rgba(242,193,78,${0.9*k})`;
+      ctx.fillRect(px(e.x-10*k), px(e.y-10*k), px(20*k), px(20*k));
+      ctx.fillStyle = `rgba(255,107,107,${0.7*k})`;
+      ctx.fillRect(px(e.x-6*k), px(e.y-6*k), px(12*k), px(12*k));
+    }
+  }
+
+  function updateCannonballs(){
+    for(let i=cannonballs.length-1;i>=0;i--){
+      const c = cannonballs[i];
+      // store a short trail
+      c.trail.push({x:c.x, y:c.y});
+      if(c.trail.length > 12) c.trail.shift();
+
+      // physics update (parabolic)
+      c.x += c.vx;
+      c.y += c.vy;
+      c.vy += g_px * (krakenMode ? 1.35 : 1.0);
+
+      // smoke trail
+      if(Math.random() < (krakenMode ? 0.95 : 0.85)){
+        smoke.push({
+          x:c.x, y:c.y,
+          vx:(Math.random()-0.5)*0.25,
+          vy:(Math.random()-0.5)*0.25,
+          a:0.55,
+          s: 3 + Math.random()*3,
+          dark: true
+        });
+      }
+
+      // collisions: water or out of bounds
+      if(c.y >= waterY || c.x < -30 || c.x > W+30 || c.life-- <= 0){
+        spawnExplosion(c.x, Math.min(c.y, waterY));
+        cannonballs.splice(i,1);
+      }
+    }
+  }
+
+  function drawCannonballs(){
+    // arcs/trails
+    for(const c of cannonballs){
+      // trail dots
+      for(let j=0;j<c.trail.length;j++){
+        const t = c.trail[j];
+        const a = j / c.trail.length;
+        ctx.globalAlpha = 0.25 * a;
+        ctx.fillStyle = "rgba(79,182,198,.9)";
+        ctx.fillRect(px(t.x), px(t.y), 3, 3);
+      }
+      ctx.globalAlpha = 1;
+
+      // cannonball
+      ctx.fillStyle = "#111";
+      ctx.fillRect(px(c.x), px(c.y), 6, 6);
+    }
+  }
+
+  function updateBattle(){
+    // sky + water
+    drawSky();
+    drawWater();
+    if(krakenMode) drawKraken();
+
+    // ships
+    drawPixelShip(200, false);
+    drawPixelShip(W-200, true);
+
+    // random cannon fire
+    const fireRate = krakenMode ? 0.05 : 0.03;
+    if(Math.random() < fireRate) fireCannon(true);
+    if(Math.random() < fireRate) fireCannon(false);
+
+    // update + draw
+    updateCannonballs();
+    updateParticles();
+    drawCannonballs();
+    drawParticles();
+
+    // caption
+    ctx.fillStyle = "rgba(233,223,199,.75)";
+    ctx.font = "14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+    ctx.fillText(krakenMode ? "KRAKEN MODE — Survive the sea!" : "Pixel Pirate Battle — (complete missions to unlock a secret)", 18, 24);
+
+    requestAnimationFrame(updateBattle);
+  }
+
+  updateBattle();
+
+  // ----- Easter Egg unlock logic (tied to mission completion) -----
+  const missionDone = {A:false,B:false,C:false,D:false,E:false,F:false};
+  function tryUnlockEasterEgg(){
+    if(easterUnlocked) return;
+    const all = Object.values(missionDone).every(Boolean);
+    if(all){
+      easterUnlocked = true;
+      eggBtn.style.display = "inline-flex";
+      eggBtn.style.alignItems = "center";
+      eggBtn.style.gap = "8px";
+      // celebratory puff
+      for(let i=0;i<50;i++){
+        smoke.push({x: W/2, y: 60, vx:(Math.random()-0.5)*2.2, vy:(Math.random()-0.7)*2.2, a:0.9, s:6+Math.random()*8});
+      }
+    }
+  }
+
+</script>
+</body>
+</html>
